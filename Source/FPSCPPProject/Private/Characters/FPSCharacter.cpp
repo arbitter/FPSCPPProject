@@ -31,6 +31,9 @@ AFPSCharacter::AFPSCharacter()
 	Dead = false;
 	bShooting = false;
 	bCrouching = false;
+	Speed = 0.0f;
+	bFwdPressed = false;
+	bRightPressed = false; 
 
 }
 
@@ -54,6 +57,7 @@ void AFPSCharacter::MoveForward(float value)
 	if (Controller && value != 0.0f)
 	{
 
+		bFwdPressed = true; 
 
 		if (bCrouching) 
 		{
@@ -63,6 +67,8 @@ void AFPSCharacter::MoveForward(float value)
 		}
 
 		FString FValue = FString::SanitizeFloat(value);
+
+		Speed = value; 
 
 		const FRotator Rotation = Controller->GetControlRotation(); //We are getting the player's rotation based on the controller. 
 		const FRotator YawRotation(0, Rotation.Yaw, 0); //We now know the player's YawRotation. 
@@ -87,12 +93,16 @@ void AFPSCharacter::MoveRight(float value)
 	if (Controller && value != 0.0f)
 	{
 
+		bRightPressed = true; 
+
 		if (bCrouching) 
 		{
 
 			value = value / 2.0f;
 
 		}
+
+		Speed = value;
 
 		const FRotator Rotation = Controller->GetControlRotation();//We are getting the player's rotation based on the controller. 
 		const FRotator YawRotation(0, Rotation.Yaw, 0);//We now know the player's YawRotation. 
@@ -268,7 +278,6 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AFPSCharacter::Shoot);
 	PlayerInputComponent->BindAction("Shoot", IE_Released, this, &AFPSCharacter::StopShooting);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AFPSCharacter::Crouching);
-	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AFPSCharacter::NotCrouching);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
@@ -368,5 +377,31 @@ void AFPSCharacter::NotCrouching()
 {
 
 	bCrouching = false;
+
+}
+
+void AFPSCharacter::FwdReleased()
+{
+
+	bFwdPressed = false;
+	if (!bRightPressed) 
+	{
+
+		Speed = 0.0f;
+
+	}
+
+}
+
+void AFPSCharacter::RightReleased() 
+{
+
+	bRightPressed = false; 
+	if (!bFwdPressed) 
+	{
+
+		Speed = 0.0f;
+
+	}
 
 }

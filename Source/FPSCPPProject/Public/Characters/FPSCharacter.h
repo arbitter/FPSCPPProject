@@ -36,6 +36,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 		bool Dead;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
+		float Speed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Speed")
+		bool bCrouching;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Speed")
+		bool bFwdPressed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Speed")
+		bool bRightPressed;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -81,8 +93,9 @@ private:
 	float DamageToApply(UPrimitiveComponent* HitComponent);
 	void Crouching();
 	void NotCrouching();
+	void FwdReleased();
+	void RightReleased();
 
 	bool bShooting;
-	bool bCrouching;
 
 };
